@@ -1,0 +1,17 @@
+keytool -genkey -v -keystore app/keystore.jks \
+  -keyalg RSA -keysize 2048 -validity 10000 \
+  -alias key0 -storepass android -keypass android \
+  -dname "CN=Android Debug,O=Android,C=US"
+
+name: Build Release APK
+run: |
+  cd android
+  ./gradlew assembleRelease
+  mkdir -p ../prebuilt/android
+  cp app/build/outputs/apk/release/app-release.apk ../prebuilt/android
+
+name: Upload APK
+uses: actions/upload-artifact@v3
+with:
+  name: app-release
+  path: prebuilt/android/app-release.apk
